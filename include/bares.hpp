@@ -21,7 +21,7 @@ class BARES {
     void InfxToPosfx();
     int avaliaPosfx();
     void run(int , const char);
-    void avaliaErrorsLine(std::string);
+    void pushLine(std::string);
     bool scopes(vector<std::string>)
 
     enum VALID {
