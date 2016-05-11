@@ -12,6 +12,7 @@ class BARES {
       queueInfx = new QueueAr<std::string>;
       queuePosfx = new QueueAr<std::string>;
       queueAux = new QueueAr<std::string>;
+
     }
     ~BARES() {
       delete this->queueInfx;
@@ -22,7 +23,10 @@ class BARES {
     int avaliaPosfx();
     void run(int , const char);
     void pushLine(std::string);
-    bool scopes(vector<std::string>)
+    void lineErrors(vector<std::string> tokens);
+    int scopes();
+    bool isValidOperand(char);
+    bool isNumber(std::string)
 
     enum VALID {
       ADICAO = int('+'),
@@ -48,6 +52,10 @@ class BARES {
     QueueAr<std::string> *queueInfx;
     QueueAr<std::string> *queuePosfx;
     QueueAr<std::string> *queueAux;
+    vector<std::string> expression;
+
+    vector<int> lastOpenedScope; // stores index (of tokens) of the position of every opened parentsis
+    vector<int> lastClosedScope; // stores index (of tokens) of the position of every closed parentsis
 };
 
 #include "bares.inl"

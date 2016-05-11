@@ -27,7 +27,7 @@ void BARES::run(int argc, const char argv[]) {
     while( !(fileIn.eof()) ) {
       getline(fileIn, line); // get a line of the file and push into the line string variable
       if (line == "") {
-        break;
+        continue;
       }
       try{
         pushLine(std::string line);
@@ -43,7 +43,7 @@ void BARES::pushLine(std::string line) {
   vector<std::string> tokens;
   std::string symb = "";
   int slow = 0;
-  bool lastIsNumber false;
+  bool lastIsNumber = false;
   for(int i = 0; i < line.size(); i++) {
     if(line[i] == " ") { // don't push space to vector
       continue;
@@ -81,12 +81,26 @@ void BARES::pushLine(std::string line) {
   }
 }
 
-void lineErros(vector<std::string> tokens) {
+bool BARES::isNumber(std::string theNumber) {
+  for(int i = 0; i < theNumber.size(); i++) {
+    if(isdigit(theNumber[i])) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void BARES::lineErros(vector<std::string> tokens) {
   std::string symb;
   int number = 0;
+  bool lastIsNumber = false;
+  long unsigned int count = 0;
+  int slowClose = 0;
+  int slowOpen = 0;
   for(int i = 0; i < tokens.size(); i++) {
     symb = tokens[i];
-    if((1 < symb.size()) && (symb[0] == char(BARES::VALID::SUBTRACAO)) ) { // number is negative
+    if((isNumber(symb)) && (symb[0] == char(BARES::VALID::SUBTRACAO)) ) { // number is negative
+      lastIsNumber = true;
       std::sting aux;
       int e;
       for(e = 0; e < symb.size(); e++) { // get the index just after the last symbol of less
@@ -102,56 +116,161 @@ void lineErros(vector<std::string> tokens) {
         throw(Error( i+1, Error::Errors::NumericConstantOutOfRange));
       }
       number = 0;
+      expression[count] = line[i];
+      count++;
     }
-    else if(1 < symb.size()) { // number is positive
+    else if(isNumber(symb)) { // number is positive
+      lastIsNumber = true;
       number = stoi(symb);
       if(32767 < number) { // if the number is out of ranger
         throw(Error( i+1, Error::Errors::NumericConstantOutOfRange));
       }
       number = 0;
+      expression[count] = line[i];
+      count++;
     }
-    else if((i == 0) && (1 == symb.size()) ) { // first element is a unexpected operand
+    else if((i == 0) && (1 == symb.size() && !(isdigit(symb[0])) ) ) { // first element is a unexpected operand
       if(isValidOperand(symb[0])) { // is a valid operand
         throw(Error(i+1, Error::Errors::LostOperator));
       }
       else { // is a invalid operand
         throw(Error(i+1, Error::Errors::InvalidOperand));
       }
+      expression[count] = line[i];
+      count++;
     }
     else {
-      switch(symb) {
+      switch(symb[0]) {
         case char(BARES::VALID::ADICAO) :
-
+          if(!lastIsNumber) { // operand of plus without the fisrt operator
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          if(i == tokens.size()-1) {
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          else {
+            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+          }
+          this->expression[count] = line[i];
+          count++;
           break;
         case char(BARES::VALID::SUBTRACAO) :
-
+          if(!lastIsNumber) { // operand of less without the fisrt operator
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          if(i == tokens.size()-1) {
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          else {
+            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+          }
+          this->expression[count] = line[i];
+          count++;
           break;
         case char(BARES::VALID::MULTIPLICACAO) :
-
+          if(!lastIsNumber) { // operand of multply without the fisrt operator
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          if(i == tokens.size()-1) {
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          else {
+            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+          }
+          this->expression[count] = line[i];
+          count++;
           break;
         case char(BARES::VALID::DIVISAO) :
-
+          if(!lastIsNumber) { // operand of multply without the fisrt operator
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          if(i == tokens.size()-1) {
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          else {
+            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+          }
+          this->expression[count] = line[i];
+          count++;
           break;
         case char(BARES::VALID::POTENCIA) :
-
+          if(!lastIsNumber) { // operand of multply without the fisrt operator
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          if(i == tokens.size()-1) {
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          else {
+            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+          }
+          this->expression[count] = line[i];
+          count++;
           break;
         case char(BARES::VALID::MODULO) :
-
-          break;
-        case char(BARES::VALID::PARENTESABRE) :
-
+          if(!lastIsNumber) { // operand of multply without the fisrt operator
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          if(i == tokens.size()-1) {
+            throw(i+1, Error(Error::Errors::LostOperator));
+          }
+          else {
+            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
+              throw(i+1, Error(Error::Errors::LostOperator));
+            }
+          }
+          this->expression[count] = line[i];
+          count++;
           break;
         case char(BARES::VALID::PARENTESFECHA) :
-
+          lastClosedScope[slowClose] = i;
+          continue;
+          break;
+        case char(BARES::VALID::PARENTESABRE) :
+          lastOpenedScope[slowOpen] = i;
+          continue;
           break;
         default: // invalid operand
-          throw(Error(Error::Errors::InvalidOperand, i + /*size of avery element of this line*/ 1));
+          throw(Error( i+1,Error::Errors::InvalidOperand));
       }
     }
   }
+  if(lastClosedScope.size() < lastOpenedScope.size()) {
+    throw(Error(Error::ERRORS::MissingClosing));
+  }
+  if(lastClosedScope.size() > lastOpenedScope.size()) {
+    throw(Error(Error::ERRORS::Mismatch));
+  }
 }
 
-bool isValidOperand(char symb) {
+bool BARES::isValidOperand(char symb) {
   switch(symb) {
     case char(BARES::VALID::ADICAO) :
       return true;
@@ -176,53 +295,52 @@ bool isValidOperand(char symb) {
   }
 }
 
-void scopes(vector<std::string> tokens) {
-  std::string symb;
-  int i;
-  int e;
-  vector<int> lastOpenedScope; // stores index (of tokens) of the position of every opened parentsis
-  vector<int> lastClosedScope; // stores index (of tokens) of the position of every closed parentsis
+int BARES::scopes() {
+  int result = 0;
+  lastOpenedScopeSize = lastOpenedScope.size();
+  lastClosedScopeSize = lastClosedScope.size();
+  for(int i = 0; i < lastOpenedScopeSize; i++) {
+    for(int e = lastOpenedScope[lastOpenedScopeSize-1-i]; e < lastClosedScope[i]; i++) {
+      this->queueInfx->enqueue(tokens[e+1]);
+    }
+    InfxToPosfx();
+    result = avaliaPosfx();
 
-  int slow = 0;
-  for(i = 0; i < tokens.size(); i++) {
-    if(tokens[i] == char(BARES::VALID::PARENTESABRE)) {
-      lastOpenedScope[slow] = i;
-      slow++;
+    delete queueInfx;
+    delete queuePosfx;
+    delete queueAux;
+
+    queuePosfx = nullptr;
+    queueInfx = nullptr;
+    queueAux = nullptr;
+
+    if(lastOpenedScope[i] == -1) {
+      break;
+    }
+
+    int aux = lastOpenedScope[lastOpenedScopeSize-1-i];
+    tokens[aux] = result;
+    for(int r = lastClosedScope[i]+1; r < lastOpenedScope[lastOpenedScopeSize-1-i]+1 && lastClosedScope[i]+1 != tokens.size(); i--) {
+      tokens[aux] = tokens[r];
+      aux++;
     }
   }
 
-  slow = 0;
-  for(e = tokens.size(); 0 <= e; e--) {
-    if(tokens[e] == char(BARES::VALID::PARENTESFECHA)) {
-      lastClosedScope[slow] = e;
-      slow++;
-    }
+  for(int e = lastOpenedScope[lastOpenedScopeSize-1-i]; e < lastClosedScope[i]; i++) {
+    this->queueInfx->enqueue(tokens[e+1]);
   }
+  InfxToPosfx();
+  result = avaliaPosfx();
 
-  if(lastClosedScope.size() < lastOpenedScope.size()) {
-    throw(Error(Error::ERRORS::MissingClosing));
-  }
+  delete queueInfx;
+  delete queuePosfx;
+  delete queueAux;
 
-  if(lastClosedScope.size() > lastOpenedScope.size()) {
-    throw(Error(Error::ERRORS::Mismatch));
-  }
+  queuePosfx = nullptr;
+  queueInfx = nullptr;
+  queueAux = nullptr;
 
-  if(0 < lastOpenedScope.size()) {
-    int result = 0;
-    for(int r = 0; r < lastClosedScope.size(); r++) {
-      int indexOfClosed = lastClosedScope[r]; // the scope size
-      int indexOfOpened = lastOpenedScope[lastOpenedScope.size()-r];
-      for(int w = 1; w <= (indexOfClosed - indexOfOpened - 1); w++) { // push each value to queueInfx
-        this->queueInfx->enqueue(tokens[w+indexOfOpened]);
-
-        this->InfxToPosfx();
-
-        result = result + this->avaliaPosfx();
-
-      }
-    }
-  }
-
+  return result;
 }
 
 void BARES::InfxToPosfx() {}
