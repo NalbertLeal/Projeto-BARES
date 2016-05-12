@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "erros.hpp"
+#include "errors.hpp"
 
 class BARES {
   public:
@@ -14,11 +14,13 @@ class BARES {
       queueAux = new QueueAr<std::string>;
 
     }
+
     ~BARES() {
       delete this->queueInfx;
       delete this->queuePosfx;
       delete this->queueAux;
     }
+
     void InfxToPosfx();
     int avaliaPosfx();
     void run(int , const char);
@@ -26,7 +28,7 @@ class BARES {
     void lineErrors(vector<std::string> tokens);
     int scopes();
     bool isValidOperand(char);
-    bool isNumber(std::string)
+    bool isNumber(std::string);
 
     enum VALID {
       ADICAO = int('+'),
@@ -40,20 +42,20 @@ class BARES {
     };
 
     enum PRECEDENCE {
-      ADICAO = int('+'),
-      SUBTRACAO = int('-'),
-      MULTIPLICACAO = int('*'),
-      DIVISAO = int('/'),
-      POTENCIA = int('^'),
-      MODULO = int('%'),
+      _ADICAO = 3,
+      _SUBTRACAO = 3,
+      _MULTIPLICACAO = 2,
+      _DIVISAO = 2,
+      _POTENCIA = 2,
+      _MODULO = 1,
     };
 
   private:
     QueueAr<std::string> *queueInfx;
     QueueAr<std::string> *queuePosfx;
     QueueAr<std::string> *queueAux;
-    vector<std::string> expression;
 
+    vector<std::string> expression;
     vector<int> lastOpenedScope; // stores index (of tokens) of the position of every opened parentsis
     vector<int> lastClosedScope; // stores index (of tokens) of the position of every closed parentsis
 };

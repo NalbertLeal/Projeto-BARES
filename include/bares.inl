@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "bares.hpp"
-#include "erros.h"
+#include "errors.hpp"
 
 void BARES::run(int argc, const char argv[]) {
     if(argc != 2) {
@@ -20,6 +20,9 @@ void BARES::run(int argc, const char argv[]) {
     std::ifstream fileIn;
     fileIn.open(namefileIn);
 
+    std::ofstream fileOut;
+    fileOut.open(namefileOut);
+
     if(!(fileIn.is_open()) ) {
       std::cout << ">>> Error. Sorry but Wasn't posible open the file " << namefileIn << std::endl;
     }
@@ -30,16 +33,23 @@ void BARES::run(int argc, const char argv[]) {
         continue;
       }
       try{
-        pushLine(std::string line);
+        pushLine(std::string line, fileOut);
       }
       catch(Error err) {
         err.printError();
         this->queueAux->makeEmpty();
+        this->queueInfx->makeEmpty();
+        this->queuePosfx->makeEmpty();
+
+        this->expression.clear();
+        this->lastOpenedScope.clear();
+        this->lastClosedScope.clear();
       }
   }
+  fileOut.close();
 }
 
-void BARES::pushLine(std::string line) {
+void BARES::pushLine(std::string line, ofstream fileOut) {
   vector<std::string> tokens;
   std::string symb = "";
   int slow = 0;
@@ -76,9 +86,9 @@ void BARES::pushLine(std::string line) {
   }
 
   lineErros(tokens);
-  scopes(tokens);
+  result = scopes(tokens);
 
-  }
+  fileOut >> result;
 }
 
 bool BARES::isNumber(std::string theNumber) {
@@ -314,9 +324,9 @@ int BARES::scopes() {
     queueInfx = nullptr;
     queueAux = nullptr;
 
-    if(lastOpenedScope[i] == -1) {
-      break;
-    }
+    // if(lastOpenedScope[i] == -1) {
+    //   break;
+    // }
 
     int aux = lastOpenedScope[lastOpenedScopeSize-1-i];
     tokens[aux] = result;
@@ -326,25 +336,132 @@ int BARES::scopes() {
     }
   }
 
-  for(int e = lastOpenedScope[lastOpenedScopeSize-1-i]; e < lastClosedScope[i]; i++) {
-    this->queueInfx->enqueue(tokens[e+1]);
+  for(int e = 0; e < tokens.size(); i++) {
+    this->queueInfx->enqueue(tokens[e]);
   }
   InfxToPosfx();
   result = avaliaPosfx();
 
-  delete queueInfx;
-  delete queuePosfx;
-  delete queueAux;
+  this->queueAux->makeEmpty();
+  this->queueInfx->makeEmpty();
+  this->queuePosfx->makeEmpty();
 
-  queuePosfx = nullptr;
-  queueInfx = nullptr;
-  queueAux = nullptr;
+  this->expression.clear();
+  this->lastOpenedScope.clear();
+  this->lastClosedScope.clear();
 
   return result;
 }
 
-void BARES::InfxToPosfx() {}
+bool prcd(std::string top, std::string symb) {
+  switch(top) {
+    case Bares::VALID::_ADICAO:
+      top = Bares::PRECEDENCE::_ADICAO;
+      break;
+    case Bares::VALID::_SUBTRACAO:
+      top = Bares::PRECEDENCE::_SUBTRACAO;
+      break;
+    case Bares::VALID::_MULTIPLICACAO:
+      top = Bares::PRECEDENCE::_MULTIPLICACAO;
+      break;
+    case Bares::VALID::_DIVISAO:
+      top = Bares::PRECEDENCE::_DIVISAO;
+      break;
+    case Bares::VALID::_MODULO:
+      top = Bares::PRECEDENCE::_MODULO;
+      break;
+    case Bares::VALID::_POTENCIA:
+      top = Bares::PRECEDENCE::_POTENCIA;
+      break;
+  }
+  switch(symb) {
+    case Bares::VALID::_ADICAO:
+      symb = Bares::PRECEDENCE::_ADICAO;
+      break;
+    case Bares::VALID::_SUBTRACAO:
+      symb = Bares::PRECEDENCE::_SUBTRACAO;
+      break;
+    case Bares::VALID::_MULTIPLICACAO:
+      symb = Bares::PRECEDENCE::_MULTIPLICACAO;
+      break;
+    case Bares::VALID::_DIVISAO:
+      symb = Bares::PRECEDENCE::_DIVISAO;
+      break;
+    case Bares::VALID::_MODULO:
+      symb = Bares::PRECEDENCE::_MODULO;
+      break;
+    case Bares::VALID::_POTENCIA:
+      symb = Bares::PRECEDENCE::_POTENCIA;
+      break;
+  }
+  return (top >= symb);
+}
 
-int BARES::avaliaPosfx(){}
+void BARES::InfxToPosfx() {
+  std::string symb;
+  StackAr<int> stack;
+  while(this->queueInfx->isEmpty()) {
+    symb = this->queueInfx->dequeue();
+    if(isNumber(symb)) {
+      this->queuePosfx->enqueue(symb);
+    }
+    else {
+      while(!(stack.isEmpty()) && prcd(stack.top(), symb)) {
+        if(prcd(stack.top(), symb)) {
+          this->queuePosfx->enqueue(stack.pop());
+        }
+      }
+      stack.push(symb);
+    }
+  }
+  while( !(stack.isEmpty()) ) {
+    this->queuePosfx->enqueue(stack.pop());
+  }
+}
+
+int BARES::avaliaPosfx(){
+  StackAr<std::string> stack;
+  long int symb, opnd1 = 0, opnd2 = 0, result = 0, i = 0;
+
+  while( !(queuePosfx->isEmpty()) ) {
+    symb = queuePosfx->dequeue();
+    if(!(isOperator(symb)) ) {
+      stack.push(symb);
+    }
+    else {
+      opnd2 = stoi(stack.pop());
+      opnd1 = stoi(stack.pop());
+      switch(symb) {
+        case char(Bares::VALID::_ADICAO):
+          result = opnd1 + opnd2;
+          break;
+        case char(Bares::VALID::_SUBTRACAO):
+          result = opnd1 - opnd2;
+          break;
+        case char(Bares::VALID::_MULTIPLICACAO):
+          result = opnd1 * opnd2;
+          break;
+        case char(Bares::VALID::_DIVISAO):
+          if(opnd2 == 0) {
+            stack.makeEmpty();
+            throw(i+1, Error(Error::Errors::DivisionByZero));
+          } else {
+            result = opnd1 / opnd2;
+          }
+          break;
+        case char(Bares::VALID::_MODULO):
+          result = opnd1 % opnd2;
+          break;
+        case char(Bares::VALID::_POTENCIA):
+          result = pow(opnd1, opnd2);
+          break;
+      }
+    }
+    stack.push(result);
+    i++;
+  }
+  result = stack.pop();
+  return result;
+}
 
 #endif

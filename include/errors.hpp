@@ -7,7 +7,7 @@
 
 class Error {
   public:
-    Error(coluna, err) : coluna(coluna), err(error) {}
+    Error(int coluna, int err) : coluna(coluna), err(err) {}
     enum Errors {
       NumericConstantOutOfRange = 1,
       LostOperator = 2,
@@ -19,7 +19,9 @@ class Error {
       DivisionByZero = 8,
       NumericOverflowError = 9
     };
+
+    
   private:
-    int coluna, error;
+    int coluna, err;
 };
 #endif
