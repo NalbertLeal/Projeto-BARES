@@ -2,8 +2,12 @@
 #define _BARES_H_
 
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include <string>
 
+#include "QueueAr.h"
+#include "StackAr.h"
 #include "errors.hpp"
 
 class BARES {
@@ -23,10 +27,10 @@ class BARES {
 
     void InfxToPosfx();
     int avaliaPosfx();
-    void run(int , const char);
-    void pushLine(std::string);
-    void lineErrors(vector<std::string> tokens);
-    int scopes();
+    void run(int &argc, const char *argv[]);
+    void pushLine(std::string );
+    void lineErrors(std::vector<std::string> );
+    int scopes(std::vector<std::string> );
     bool isValidOperand(char);
     bool isNumber(std::string);
 
@@ -51,13 +55,15 @@ class BARES {
     };
 
   private:
+    long int resultAux;
+
     QueueAr<std::string> *queueInfx;
     QueueAr<std::string> *queuePosfx;
     QueueAr<std::string> *queueAux;
 
-    vector<std::string> expression;
-    vector<int> lastOpenedScope; // stores index (of tokens) of the position of every opened parentsis
-    vector<int> lastClosedScope; // stores index (of tokens) of the position of every closed parentsis
+    std::vector<std::string> expression;
+    std::vector<int> lastOpenedScope; // stores index (of tokens) of the position of every opened parentsis
+    std::vector<int> lastClosedScope; // stores index (of tokens) of the position of every closed parentsis
 };
 
 #include "bares.inl"

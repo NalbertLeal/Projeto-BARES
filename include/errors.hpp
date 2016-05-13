@@ -1,9 +1,8 @@
 #ifndef _ERROR_HPP_
-#define _ERROR_HPP__HPP_
+#define _ERROR_HPP_
 
 #include <iostream>
-
-
+#include <string>
 
 class Error {
   public:
@@ -19,8 +18,38 @@ class Error {
       DivisionByZero = 8,
       NumericOverflowError = 9
     };
+    std::string printError() {
+      switch(err) {
+        case 1:
+          return "";
+          break;
+        case 2:
+          return "";
+          break;
+        case 3:
+          return "";
+          break;
+        case 4:
+          return "";
+          break;
+        case 5:
+          return "";
+          break;
+        case 6:
+          return "";
+          break;
+        case 7:
+          return "";
+          break;
+        case 8:
+          return "";
+          break;
+        case 9:
+          return "";
+          break;
+      }
+    }
 
-    
   private:
     int coluna, err;
 };
