@@ -1,6 +1,6 @@
-  # Atividade de implementação da lista
+# Atividade de implementação da lista
 
-  ### tópicos abordados:
+### tópicos abordados:
   
 - **A implementação**;
 - **Testes realizados**;
@@ -25,7 +25,7 @@
   
   O teste realizado será feito com o arquivo enviado pelo proprio professor, esse arquivo se encontra na pasta "test".
     
-  ### Bugs:
+### Bugs:
   
   O codigo ainda não está finalizado.Por conta disso não funciona cmo deveria.
 
