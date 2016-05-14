@@ -30,7 +30,7 @@ class BARES {
     void run(int &argc, const char *argv[]);
     void pushLine(std::string );
     void lineErrors(std::vector<std::string> );
-    int scopes(std::vector<std::string> );
+    int scopes();
     bool isValidOperand(char);
     bool isNumber(std::string);
 

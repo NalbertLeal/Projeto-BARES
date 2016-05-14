@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <math.h>
 
 #include "QueueAr.h"
 #include "StackAr.h"
@@ -12,7 +13,7 @@
 #include "errors.hpp"
 
 void BARES::run(int &argc, const char *argv[]) {
-    if(argc != 2) {
+    if(argc != 3) {
       std::cout << ">>> Error. please use this notation:" << std::endl;
       std::cout << ">>> ./bares NameOfTheFileToRead NameOfTheFileToOut" << std::endl;
     }
@@ -123,7 +124,7 @@ void BARES::pushLine(std::string line) {
   }
 
   lineErrors(tokens);
-  resultAux = scopes(tokens);
+  resultAux = scopes();
 }
 
 bool BARES::isNumber(std::string theNumber) {
@@ -146,6 +147,8 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
   // long unsigned int count = 0;
   int slowClose = 0;
   int slowOpen = 0;
+  std::string ehParentAberto = "(";
+  std::string ehParentFecha = ")";
   for(long unsigned int i = 0; i < tokens.size(); i++) {
     symb = tokens[i];
     if((isNumber(symb)) && (symb[0] == char(BARES::VALID::SUBTRACAO)) ) { // number is negative
@@ -202,17 +205,17 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
       switch(symb[0]) {
         case char(BARES::VALID::ADICAO) :
           if(!lastIsNumber) { // operand of plus without the fisrt operator
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           if(i == tokens.size()-1) {
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           else {
-            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
-            }
-            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
+            // if(tokens[i+1] != ehParentAberto || !(isNumber(tokens[i+1])) ) {
+            //   throw(Error(i+1, Error::Errors::LostOperator));
+            // }
+            if(tokens[i-1] != ehParentFecha || !lastIsNumber) {
+              throw(Error(i+1, Error::Errors::LostOperator));
             }
           }
           this->expression[i] = tokens[i];
@@ -221,17 +224,17 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
           break;
         case char(BARES::VALID::SUBTRACAO) :
           if(!lastIsNumber) { // operand of less without the fisrt operator
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           if(i == tokens.size()-1) {
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           else {
-            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
-            }
-            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
+            // if(tokens[i+1] != ehParentAberto || !(isNumber(tokens[i+1])) ) {
+            //   throw(Error(i+1, Error::Errors::LostOperator));
+            // }
+            if(tokens[i-1] != ehParentFecha || !lastIsNumber) {
+              throw(Error(i+1, Error::Errors::LostOperator));
             }
           }
           this->expression[i] = tokens[i];
@@ -240,17 +243,17 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
           break;
         case char(BARES::VALID::MULTIPLICACAO) :
           if(!lastIsNumber) { // operand of multply without the fisrt operator
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           if(i == tokens.size()-1) {
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           else {
-            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
-            }
-            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
+            // if(tokens[i+1] != ehParentAberto || !(isNumber(tokens[i+1])) ) {
+            //   throw(Error(i+1, Error::Errors::LostOperator));
+            // }
+            if(tokens[i-1] != ehParentFecha || !lastIsNumber) {
+              throw(Error(i+1, Error::Errors::LostOperator));
             }
           }
           this->expression[i] = tokens[i];
@@ -259,17 +262,17 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
           break;
         case char(BARES::VALID::DIVISAO) :
           if(!lastIsNumber) { // operand of multply without the fisrt operator
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           if(i == tokens.size()-1) {
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           else {
-            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
-            }
-            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
+            // if(tokens[i+1] != ehParentAberto || !(isNumber(tokens[i+1])) ) {
+            //   throw(Error(i+1, Error::Errors::LostOperator));
+            // }
+            if(tokens[i-1] != ehParentFecha || !lastIsNumber) {
+              throw(Error(i+1, Error::Errors::LostOperator));
             }
           }
           this->expression[i] = tokens[i];
@@ -278,17 +281,17 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
           break;
         case char(BARES::VALID::POTENCIA) :
           if(!lastIsNumber) { // operand of multply without the fisrt operator
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           if(i == tokens.size()-1) {
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           else {
-            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
-            }
-            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
+            // if(tokens[i+1] != ehParentAberto || !(isNumber(tokens[i+1])) ) {
+            //   throw(Error(i+1, Error::Errors::LostOperator));
+            // }
+            if(tokens[i-1] != ehParentFecha || !lastIsNumber) {
+              throw(Error(i+1, Error::Errors::LostOperator));
             }
           }
           this->expression[i] = tokens[i];
@@ -297,17 +300,17 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
           break;
         case char(BARES::VALID::MODULO) :
           if(!lastIsNumber) { // operand of multply without the fisrt operator
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           if(i == tokens.size()-1) {
-            throw(i+1, Error(Error::Errors::LostOperator));
+            throw(Error(i+1, Error::Errors::LostOperator));
           }
           else {
-            if(tokens[i+1] != char(BARES::VALID::PARENTESABRE) || isdigit(tokens[i+1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
-            }
-            else if(tokens[i-1] != char(BARES::VALID::PARENTESFECHA) || isdigit(tokens[i-1])) {
-              throw(i+1, Error(Error::Errors::LostOperator));
+            // if(tokens[i+1] != ehParentAberto || !(isNumber(tokens[i+1])) ) {
+            //   throw(Error(i+1, Error::Errors::LostOperator));
+            // }
+            if(tokens[i-1] != ehParentFecha || !lastIsNumber) {
+              throw(Error(i+1, Error::Errors::LostOperator));
             }
           }
           this->expression[i] = tokens[i];
@@ -316,7 +319,7 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
           break;
         case char(BARES::VALID::PARENTESFECHA) :
           if(!lastIsNumber) {
-            throw(Error( i+1, Error::Errors::ExtraneousSymbol));
+            throw(Error(i+1, Error::Errors::ExtraneousSymbol));
           }
           lastClosedScope[slowClose] = i;
           this->expression[i] = tokens[i];
@@ -325,7 +328,7 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
           break;
         case char(BARES::VALID::PARENTESABRE) :
           if(lastIsNumber) {
-            throw(Error( i+1, Error::Errors::ExtraneousSymbol));
+            throw(Error(i+1, Error::Errors::ExtraneousSymbol));
           }
           lastOpenedScope[slowOpen] = i;
           this->expression[i] = tokens[i];
@@ -334,19 +337,19 @@ void BARES::lineErrors(std::vector<std::string> tokens) {
           break;
         default: // invalid operand
           if(symb[0] == '=' || symb[0] == '.') {
-            throw(Error( i+1,Error::Errors::InvalidOperand));
+            throw(Error(i+1, Error::Errors::InvalidOperand));
           }
           else {
-            throw(ERRO(i+1, ERRO::TYPE::IllFormedExpression));
+            throw(Error(i+1, Error::Errors::IllFormedExpression));
           }
       }
     }
   }
   if(lastClosedScope.size() < lastOpenedScope.size()) {
-    throw(Error(Error::ERRORS::MissingClosing));
+    throw(Error(lastOpenedScope[lastOpenedScope.size() - lastClosedScope.size()], Error::Errors::MissingClosing));
   }
   if(lastClosedScope.size() > lastOpenedScope.size()) {
-    throw(Error(Error::ERRORS::Mismatch));
+    throw(Error(lastClosedScope[lastClosedScope.size() - lastOpenedScope.size()], Error::Errors::Mismatch));
   }
 }
 
@@ -377,10 +380,10 @@ bool BARES::isValidOperand(char symb) {
 
 int BARES::scopes() {
   int result = 0;
-  lastOpenedScopeSize = lastOpenedScope.size();  // size of vector lastOpenedScope
-  lastClosedScopeSize = lastClosedScope.size();  // size of vector lastClosedScope
-  for(int i = 0; i < lastOpenedScopeSize; i++) {
-    for(int e = lastOpenedScope[lastOpenedScopeSize-1-i]; e < lastClosedScope[i]; i++) {
+  unsigned long int lastOpenedScopeSize = lastOpenedScope.size();  // size of vector lastOpenedScope
+  unsigned long int lastClosedScopeSize = lastClosedScope.size();  // size of vector lastClosedScope
+  for(int i = 0; i < lastClosedScopeSize; i++) {
+    for(unsigned long int e = lastOpenedScope[lastOpenedScopeSize-1-i]; e < lastClosedScope[i]; e++) {
       this->queueInfx->enqueue(expression[e+1]);
     }
     InfxToPosfx();
@@ -397,16 +400,38 @@ int BARES::scopes() {
     //   break;
     // }
 
-    int aux = lastOpenedScope[lastOpenedScopeSize-1-i];
-    tokens[aux] = result;
-    for(int r = lastClosedScope[i]+1; r < lastOpenedScope[lastOpenedScopeSize-1-i]+1 && lastClosedScope[i]+1 != tokens.size(); i--) {
-      tokens[aux] = tokens[r];
-      aux++;
+    unsigned long int r;
+    std::vector<std::string> expressionAux;
+    for(r = 0; r < lastOpenedScope[lastOpenedScopeSize-1-i]; r++) {
+      expressionAux[r] = expression[r];
     }
+
+    unsigned long int rA = r+1;
+    expressionAux[r+1] = result;
+
+    for(r = i; r < expression.size(); r++) {
+      expressionAux[rA] = expression[r];
+      rA++;
+    }
+
+    this->expression.clear();
+    this->lastOpenedScope.clear();
+    this->lastClosedScope.clear();
+
+    for(r = 0; r < expressionAux.size(); r++) {
+      expression[r] = expressionAux[r];
+    }
+
+    // int aux = lastOpenedScope[lastOpenedScopeSize-1-i];
+    // expression[aux] = result;
+    // for(int r = lastClosedScope[i]+1; r < lastOpenedScope[lastOpenedScopeSize-1-i]+1 && lastClosedScope[i]+1 != tokens.size(); i--) {
+    //   expression[aux] = expression[r];
+    //   aux++;
+    // }
   }
   // what is not into a scope
-  for(int e = 0; e < tokens.size(); i++) {
-    this->queueInfx->enqueue(tokens[e]);
+  for(int e = 0; e < expression.size(); e++) {
+    this->queueInfx->enqueue(expression[e]);
   }
   InfxToPosfx();
   result = avaliaPosfx();
@@ -426,44 +451,44 @@ int BARES::scopes() {
 }
 
 bool prcd(std::string top, std::string symb) {
-  switch(top) {
-    case Bares::VALID::_ADICAO:
-      top = Bares::PRECEDENCE::_ADICAO;
+  switch(top[0]) {
+    case char(BARES::VALID::ADICAO):
+      top = BARES::PRECEDENCE::_ADICAO;
       break;
-    case Bares::VALID::_SUBTRACAO:
-      top = Bares::PRECEDENCE::_SUBTRACAO;
+    case char(BARES::VALID::SUBTRACAO):
+      top = BARES::PRECEDENCE::_SUBTRACAO;
       break;
-    case Bares::VALID::_MULTIPLICACAO:
-      top = Bares::PRECEDENCE::_MULTIPLICACAO;
+    case char(BARES::VALID::MULTIPLICACAO):
+      top = BARES::PRECEDENCE::_MULTIPLICACAO;
       break;
-    case Bares::VALID::_DIVISAO:
-      top = Bares::PRECEDENCE::_DIVISAO;
+    case char(BARES::VALID::DIVISAO):
+      top = BARES::PRECEDENCE::_DIVISAO;
       break;
-    case Bares::VALID::_MODULO:
-      top = Bares::PRECEDENCE::_MODULO;
+    case char(BARES::VALID::MODULO):
+      top = BARES::PRECEDENCE::_MODULO;
       break;
-    case Bares::VALID::_POTENCIA:
-      top = Bares::PRECEDENCE::_POTENCIA;
+    case char(BARES::VALID::POTENCIA):
+      top = BARES::PRECEDENCE::_POTENCIA;
       break;
   }
-  switch(symb) {
-    case Bares::VALID::_ADICAO:
-      symb = Bares::PRECEDENCE::_ADICAO;
+  switch(symb[0]) {
+    case char(BARES::VALID::ADICAO):
+      symb = BARES::PRECEDENCE::_ADICAO;
       break;
-    case Bares::VALID::_SUBTRACAO:
-      symb = Bares::PRECEDENCE::_SUBTRACAO;
+    case char(BARES::VALID::SUBTRACAO):
+      symb = BARES::PRECEDENCE::_SUBTRACAO;
       break;
-    case Bares::VALID::_MULTIPLICACAO:
-      symb = Bares::PRECEDENCE::_MULTIPLICACAO;
+    case char(BARES::VALID::MULTIPLICACAO):
+      symb = BARES::PRECEDENCE::_MULTIPLICACAO;
       break;
-    case Bares::VALID::_DIVISAO:
-      symb = Bares::PRECEDENCE::_DIVISAO;
+    case char(BARES::VALID::DIVISAO):
+      symb = BARES::PRECEDENCE::_DIVISAO;
       break;
-    case Bares::VALID::_MODULO:
-      symb = Bares::PRECEDENCE::_MODULO;
+    case char(BARES::VALID::MODULO):
+      symb = BARES::PRECEDENCE::_MODULO;
       break;
-    case Bares::VALID::_POTENCIA:
-      symb = Bares::PRECEDENCE::_POTENCIA;
+    case char(BARES::VALID::POTENCIA):
+      symb = BARES::PRECEDENCE::_POTENCIA;
       break;
   }
   return (top >= symb);
@@ -471,7 +496,7 @@ bool prcd(std::string top, std::string symb) {
 
 void BARES::InfxToPosfx() {
   std::string symb;
-  StackAr<int> stack;
+  StackAr<std::string> stack;
   while(this->queueInfx->isEmpty()) {
     symb = this->queueInfx->dequeue();
     if(isNumber(symb)) {
@@ -492,39 +517,40 @@ void BARES::InfxToPosfx() {
 }
 
 int BARES::avaliaPosfx(){
-  StackAr<std::string> stack;
-  long int symb, opnd1 = 0, opnd2 = 0, result = 0, i = 0;
+  StackAr<int> stack;
+  long int opnd1 = 0, opnd2 = 0, result = 0, i = 0;
+  std::string symb;
 
   while( !(queuePosfx->isEmpty()) ) {
     symb = queuePosfx->dequeue();
-    if(!(isOperator(symb)) ) {
-      stack.push(symb);
+    if(isNumber(symb)) {
+      stack.push(std::stoi(symb));
     }
     else {
-      opnd2 = stoi(stack.pop());
-      opnd1 = stoi(stack.pop());
-      switch(symb) {
-        case char(Bares::VALID::_ADICAO):
+      opnd2 = stack.pop();
+      opnd1 = stack.pop();
+      switch(symb[0]) {
+        case char(BARES::VALID::ADICAO):
           result = opnd1 + opnd2;
           break;
-        case char(Bares::VALID::_SUBTRACAO):
+        case char(BARES::VALID::SUBTRACAO):
           result = opnd1 - opnd2;
           break;
-        case char(Bares::VALID::_MULTIPLICACAO):
+        case char(BARES::VALID::MULTIPLICACAO):
           result = opnd1 * opnd2;
           break;
-        case char(Bares::VALID::_DIVISAO):
+        case char(BARES::VALID::DIVISAO):
           if(opnd2 == 0) {
             stack.makeEmpty();
-            throw(i+1, Error(Error::Errors::DivisionByZero));
+            throw(Error(i+1, Error::Errors::DivisionByZero));
           } else {
             result = opnd1 / opnd2;
           }
           break;
-        case char(Bares::VALID::_MODULO):
+        case char(BARES::VALID::MODULO):
           result = opnd1 % opnd2;
           break;
-        case char(Bares::VALID::_POTENCIA):
+        case char(BARES::VALID::POTENCIA):
           result = pow(opnd1, opnd2);
           break;
       }

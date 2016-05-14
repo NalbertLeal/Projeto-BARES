@@ -47,12 +47,12 @@ Data StackAr< Data >::pop() {
 
 template < class Data >
 Data StackAr< Data >::top() const {
-  return theTop;
+  return theStack[theTop];
 }
 
 template < class Data >
 bool StackAr< Data >::isEmpty() const {
-  if( (theTop == 0) && (theStack[theTop] == 0) ) {
+  if(theTop == -1) {
     return true;
   }
   return false;
@@ -60,17 +60,22 @@ bool StackAr< Data >::isEmpty() const {
 
 template < class Data >
 void StackAr< Data >::makeEmpty() {
-  theTop = 0;
+  theTop = -1;
   std::cout << ">>> Stack was cleaned.\n";
 }
 
 template < class Data >
 void StackAr< Data >::printStack() {
-  std::cout << ">>> The elements that still in the stack are: \n [ ";
-  for(int i = 0; i < theTop; i++) {
-    std::cout << theStack[i] << " " ;
+  if(theTop == -1) {
+    std::cout << ">>> The stack is empty: \n [] \n";
   }
-  std::cout << "] \n";
+  else {
+    std::cout << ">>> The elements that still in the stack are: \n [ ";
+    for(int i = 0; i < theTop; i++) {
+      std::cout << theStack[i] << " " ;
+    }
+    std::cout << "] \n";
+  }
 }
 
 #endif

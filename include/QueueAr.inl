@@ -65,7 +65,7 @@ Data QueueAr< Data >::dequeue() {
 
 template < class Data >
 Data QueueAr< Data >::getFront() const {
-  return theFront;
+  return theQueue[theFront];
 }
 
 template < class Data >
