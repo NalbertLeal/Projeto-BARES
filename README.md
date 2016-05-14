@@ -1,4 +1,4 @@
-# Atividade de implementação da lista
+# BARES (Basic Arithmetic Expression Evaluator based on Stacks)
 
 ### tópicos abordados:
   
