@@ -9,8 +9,8 @@
 - **Sobre mim**;
 
 ##### status do projeto: **Quase finalizado**  
-.
-  #### A implementação:  
+
+#### A implementação:  
   
   1) **include/bares.hpp** : possui a classe BARES que controla todo o processo.
   2) **src/bares.inl** : Contém a implentação da classe BARES.
@@ -21,7 +21,7 @@
   
     g++ -std=c++11 -I include src/main.cpp -o bin/bares
   
-  ### Testes realizados:
+### Testes realizados:
   
   O teste realizado será feito com o arquivo enviado pelo proprio professor, esse arquivo se encontra na pasta "test".
     
