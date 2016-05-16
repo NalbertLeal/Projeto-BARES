@@ -13,7 +13,7 @@
 
 #### Agradecimentos:  
   
-  Esse projeto foi feito por Nalbert Gabriel Melo Leal, aluno do bacharelado de BTI no IMD/UFRN. Entretanto ouve ajuda de Matheus Alves na ideia da criação de uma classe que armazena-se todos os possiveis erros gerados pelo programa, Luciano na ideia básica de como uma linha do arquivo de entrada poderia ser lido e do professor Selan Rodrigues por acompanhar a turma no decorrer da implementação dos projetos.
+  Esse projeto foi feito por Nalbert Gabriel Melo Leal, aluno do bacharelado de BTI no IMD/UFRN. Entretanto ouve ajuda de Matheus Alves na ideia da criação de uma classe que armazena-se todos os possiveis erros gerados pelo programa, Luciano Eduardo na ideia básica de como uma linha do arquivo de entrada poderia ser lido e do professor Selan Rodrigues por acompanhar a turma no decorrer da implementação dos projetos.
 
 #### A implementação:  
   
