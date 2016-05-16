@@ -37,10 +37,10 @@ class Erros {
           retorno =  "Mismatch \')\': column " + std::to_string(coluna) +  ".\n";
           break;
         case 6:
-          retorno =  "Missing closing \')\' to match opening \'(\' at: column " + std::to_string(coluna) +  ".\n";
+          retorno =  "Lost operator: column " + std::to_string(coluna) +  ".\n";
           break;
         case 7:
-          retorno =  "Lost operator: column " + std::to_string(coluna) +  ".\n";
+          retorno =  "Missing closing \')\' to match opening \'(\' at: column " + std::to_string(coluna) +  ".\n";
           break;
         case 8:
           retorno =  "Division by zero!\n";

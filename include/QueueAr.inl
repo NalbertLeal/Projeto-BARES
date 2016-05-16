@@ -8,11 +8,10 @@
 template < class Data >
 void QueueAr< Data >::enqueue(const Data & _x) {
   int e = 0;
-  if( ((theFront == -1) and (theLast == -1)) ) {
+  if( ((theFront == -1) && (theLast == -1)) ) {
     theFront++;
   }
   else if(theLast < theFront) {
-    std::cout << "theLast = " << theLast << " ,theFront = " << theFront << std::endl;
     theFront = 0;
     theLast = 0;
     theQueue[theLast + 1] == _x;
@@ -45,21 +44,21 @@ void QueueAr< Data >::enqueue(const Data & _x) {
       }
     }
   }
-
+  std::cout << "theLast " << theLast << std::endl;
   theQueue[theLast + 1] = _x;
   theLast++;
 }
 
 template < class Data >
 Data QueueAr< Data >::dequeue() {
-  if(!isEmpty()) {
+  if(!(isEmpty())) {
     Data elementTop = theQueue[theFront];
     theFront++;
     return elementTop;
   }
   else {
     std::cout << ">>> The queue is empty, so it's impossible to return the correct element.\n";
-    return 0;
+    return "";
   }
 }
 
@@ -70,7 +69,7 @@ Data QueueAr< Data >::getFront() const {
 
 template < class Data >
 bool QueueAr< Data >::isEmpty() const {
-  if( (theLast < theFront) or ((theFront == -1) and (theLast == 0)) ) {
+  if( (theLast < theFront) || ((theFront == -1) && (theLast == -1)) ) {
     return true;
   }
   return false;

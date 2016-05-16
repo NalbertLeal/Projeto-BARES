@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <cstring>
-#include <string>
 
 #include "stackar.h"
 
@@ -12,7 +11,7 @@ void StackAr< Data >::push(const Data & _x) {
   if(theTop == capacity) {
     std::cout << ">>> The stack is full. Folding the capacity ...\n";
     capacity = 2 * capacity;
-    Data *newStack = new Data[capacity];
+    Data *newStack = new int[capacity];
 
     // Add elements of theStack to newStack
     for(int i = 0; i < theTop; i++) {
@@ -40,16 +39,23 @@ Data StackAr< Data >::pop() {
     theTop--;
     return elementTop;
   }
+  else {
+    std::cout << ">>> The stack is empty, so it's impossible to return the correct element.\n";
+    return 0;
+  }
 }
 
 template < class Data >
 Data StackAr< Data >::top() const {
-  return theStack[theTop];
+  return theTop;
 }
 
 template < class Data >
 bool StackAr< Data >::isEmpty() const {
-  return theTop <= 0;
+  if( (theTop == 0) && (theStack[theTop] == 0) ) {
+    return true;
+  }
+  return false;
 }
 
 template < class Data >

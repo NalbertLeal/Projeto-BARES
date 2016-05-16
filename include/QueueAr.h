@@ -11,7 +11,7 @@
 template < class Data >
 class QueueAr : public AbsQueue< Data > {
   public:
-    QueueAr(int size = 10) : capacity(size) {
+    QueueAr(int size = 50) : capacity(size) {
       theFront = -1;
       theLast = -1;
       theQueue = new Data[size];
