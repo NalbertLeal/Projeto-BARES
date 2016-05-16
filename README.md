@@ -29,6 +29,10 @@
 ### Testes realizados:
   
   O teste realizado foi feito com o arquivo "entrada9.txt" enviado pelo proprio professor, esse arquivo se encontra na pasta bin/ junto ao arquivo "saida" que possui a saida desejada.
+  
+  Para rodar o programa depois de compilado para fazer os teste basta usar o seguinte comando:
+  
+    ./bin/compilado bin/entrada9.txt bin/saida.txt
     
 ### Bugs:
   
