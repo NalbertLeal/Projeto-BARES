@@ -8,7 +8,8 @@
 #include <math.h>
 
 #include "QueueAr.h"
-#include "stackar.h"
+// #include "stackar.h"
+#include "thePilha.hpp"
 #include "bares.hpp"
 #include "erros.hpp"
 
@@ -245,6 +246,7 @@ void BARES::runFile(std::string fileName, std::string fileNameOut) {
           slowVectorOpened++; // incrementa em 1 a posição do vector para que o proximo elemento já entre ana posição correta
         }
         else if(symb[0] == ')') {
+          std::cout << "PARENTES FECHADO = " << t << std::endl;
           int auxPositionClosed = posicaoEscopos.pop();
           auxClosed = BARES::Closed{t, auxPositionClosed};
           auxParentFechados[slowVectorClosed] = auxClosed;
@@ -274,54 +276,89 @@ void BARES::runFile(std::string fileName, std::string fileNameOut) {
         parentFechados[t] = auxParentFechados[auxIdiceC];
       }
 
+      std::string auxStringResultado = "";
       for(int t = parentAbertos.size()-1; 0 <= t; t--) {
         int auxIndiceAbre = parentAbertos[t].index;
         int auxIndiceFechados = parentFechados[t].index;
 
+        std::cout << "auxIndiceAbre = " << auxIndiceAbre << " , auxIndiceFechados = " << auxIndiceFechados << std::endl;
+
         for(unsigned long int k = auxIndiceAbre+1; k < auxIndiceFechados; k++) {
-          if(auxExpression[k][0] == ' ') { continue; }
+          if(auxExpression[k] == " ") { continue; }
+          std::cout << "COLOCANDO O SEGUINTE ELEMENTO   " << auxExpression[k] << std::endl;
           queueInfx->enqueue(auxExpression[k]);
         }
 
+        // std::cout << "        [" << std::endl;
+        // for(int qe = 0; qe < auxExpression.size(); qe++) {
+        //   std::cout << "  " << auxExpression[qe];
+        // }
+        // std::cout << "] " << std::endl;
+
+        // std::vector<std::string> vt(auxIndiceFechados - auxIndiceAbre);
+        // for(int qe = 0; qe < vt.size(); qe++) {
+        //   vt[qe] = queueInfx->enqueue;
+        // }
+        //
+        // std::cout << "        [" << std::endl;
+        // for(int qe = 0; qe < vt.size(); qe++) {
+        //   std::cout << "  " << vt[qe];
+        // }
+        // std::cout << "] " << std::endl;
+
         InfxToPosfx();
-        std::cout << "TESTE" << std::endl;
+        //auxExpression ok ate aki
         long int auxIntResutado = avaliaPosfx();
 
+        delete queueInfx;
+        delete queuePosfx;
+
+        queueInfx = new QueueAr<std::string>;
+        queuePosfx = new QueueAr<std::string>;
+
         if(auxIntResutado < -32767 || 32767 < auxIntResutado) {
-          throw(Erros(t+1, Erros::erros::NumericOverflowError));
-        }
-        if(auxIndiceAbre == -1) {
-          // caso especial do escopo que engloba tada a fução
-          auxIndiceAbre = 0;
-          auxIndiceFechados = auxExpression.size()-1;
-        }
-        auxExpression[auxIndiceAbre] = auxIntResutado;
-        for(int qe = auxIndiceAbre+1; qe <= auxIndiceFechados; qe++) {
-          std::cout << "TESTE34" << std::endl;
-          auxExpression[qe] = " ";
-        }
-        /*
-        int u = auxIndiceFechados+1;
-        int auxUSlow = auxIndiceAbre+1;
-        if(auxIndiceFechados == line.size()) {
-          auxIndiceFechados = line.size()-2;
+          throw(Erros(0, Erros::erros::NumericOverflowError));
         }
 
-        for(int u = auxIndiceFechados+1; expression[u] != "" ; u++) {
-          expression[auxUSlow] = expression[u];
+        if(auxIndiceAbre != -1) {
+          std::vector<std::string> auxAux(auxExpression.size()-(auxIndiceFechados-auxIndiceAbre)+1);
+          for(int er = 0; er < auxIndiceAbre; er++) {
+            auxAux[er] = auxExpression[er];
+          }
+          auxAux[auxIndiceAbre] = std::to_string(auxIntResutado);
+          if(auxIndiceFechados < auxExpression.size()) {
+            int fast = auxIndiceFechados+1;
+            for(int er = auxIndiceAbre; er < auxAux.size() && auxExpression.size() != fast; er++) {
+              auxAux[er] = auxExpression[fast];
+              fast++;
+            }
+          }
+          auxExpression.resize(auxAux.size(), "");
+          for(int er = 0; er < auxAux.size(); er++) {
+            auxExpression[er] = auxAux[er];
+          }
         }
-        expression.resize(u);
-        */
-        std::string auxStringResultado = "";
+        else {
+          auxExpression.resize(1);
+        }
+
         auxStringResultado = auxStringResultado + std::to_string(auxIntResutado);
         auxStringResultado = auxStringResultado + '\n';
       }
+
+      finalString = finalString + auxStringResultado;
 
     }
     catch (Erros err) {
       std::string msg = err.oErro();
       finalString = finalString + msg;
       msg = "";
+
+      delete queueInfx;
+      delete queuePosfx;
+
+      queueInfx = new QueueAr<std::string>;
+      queuePosfx = new QueueAr<std::string>;
     }
   }
 
@@ -388,40 +425,42 @@ bool prcd(std::string top, std::string symb) {
 }
 
 void BARES::InfxToPosfx() {
+  std::cout << "TRATAMENTO INFIX" << std::endl;
   std::string symb;
   StackAr<std::string> stack;
   while(!queueInfx->isEmpty()) {
     symb = queueInfx->dequeue();
-    std::cout << "SYMB    " << symb << std::endl;
+    std::cout << "O SYMB =  " << symb << std::endl;
     if(isNumber(symb)) {
+      std::cout << "COLOCANDO NA FILA POSFX = " << symb << std::endl;
       queuePosfx->enqueue(symb);
     }
     else {
       while(!(stack.isEmpty()) && prcd(stack.top(), symb)) {
         if(prcd(stack.top(), symb)) {
+          std::cout << "COLOCANDO NA FILA POSFX = " << symb << std::endl;
           this->queuePosfx->enqueue(stack.pop());
         }
       }
       stack.push(symb);
     }
   }
-  std::cout << "TESTE2" << std::endl;
   while( !stack.isEmpty()) {
     symb = stack.pop();
-    std::cout << "COLOCANDO  " << symb << std::endl;
+    std::cout << "COLOCANDO NA FILA POSFX = " << symb << std::endl;
     this->queuePosfx->enqueue(symb);
-    std::cout << "TESTE2.5" << std::endl;
   }
-  std::cout << "TESTE3" << std::endl;
+  stack.makeEmpty();
 }
 
 int BARES::avaliaPosfx(){
+  std::cout << "AVALIAÇÃO POSFIXA" << std::endl;
   StackAr<int> stack;
   int opnd1 = 0, opnd2 = 0, result = 0, i = 0;
   std::string symb;
 
-  int contador = 1;
   while( !(queuePosfx->isEmpty()) ) {
+    stack.printStack();
     symb = queuePosfx->dequeue();
     if(isNumber(symb)) {
       stack.push(std::stoi(symb));
@@ -429,6 +468,7 @@ int BARES::avaliaPosfx(){
     else {
       opnd2 = stack.pop();
       opnd1 = stack.pop();
+      std::cout << "OPERAÇÃO SENDO FEITA    " << opnd1 << symb << opnd2 << std::endl;
       switch(symb[0]) {
         case '+':
           result = opnd1 + opnd2;
@@ -441,15 +481,14 @@ int BARES::avaliaPosfx(){
           break;
         case '/':
           if(opnd2 == 0) {
-            throw(Erros(contador, Erros::erros::DivisionByZero));
+            throw(Erros(i+1, Erros::erros::DivisionByZero));
           }
-          else {
             result = opnd1 / opnd2;
-          }
           break;
         case '%':
-          std::cout << "opnd1" << opnd1 << std::endl;
-          std::cout << "opnd2" << opnd2 << std::endl;
+          if(opnd2 == 0) {
+            throw(Erros(i+1, Erros::erros::Mismatch));
+          }
           result = opnd1 % opnd2;
           break;
         case '^':
@@ -459,9 +498,9 @@ int BARES::avaliaPosfx(){
     }
     stack.push(result);
     i++;
-    contador++;
   }
   result = stack.pop();
+  stack.makeEmpty();
   return result;
 }
 

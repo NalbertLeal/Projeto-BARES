@@ -12,7 +12,7 @@ class StackAr : public AbsStack < Data > {
     StackAr(int tamanho = 50) {
       theStack = new Data[tamanho];
       capacity = tamanho;
-      theTop = 0;
+      theTop = -1;
     }
 
     ~StackAr() {

@@ -44,7 +44,6 @@ void QueueAr< Data >::enqueue(const Data & _x) {
       }
     }
   }
-  std::cout << "theLast " << theLast << std::endl;
   theQueue[theLast + 1] = _x;
   theLast++;
 }

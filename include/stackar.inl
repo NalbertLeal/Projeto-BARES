@@ -28,15 +28,15 @@ void StackAr< Data >::push(const Data & _x) {
 
     delete [] newStack;
   }
-  theStack[theTop] = _x;
   theTop++;
+  theStack[theTop] = _x;
 
 }
 
 template < class Data >
 Data StackAr< Data >::pop() {
   if(!isEmpty()) {
-    Data elementTop = theStack[theTop-1];
+    Data elementTop = theStack[theTop];
     theTop--;
     return elementTop;
   }

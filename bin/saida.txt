@@ -1,0 +1,24 @@
+Numeric constant out of range: column 1.
+Ill-formed expression or missing term detected: column 3.
+Ill-formed expression or missing term detected: column 5.
+Invalid operand: column 3.
+Invalid operand: column 2.
+Extraneous symbol: column 7.
+Lost operator: column 4.
+Lost operator: column 1.
+Lost operator: column 1.
+Lost operator: column 1.
+Lost operator: column 7.
+Extraneous symbol: column 7.
+Mismatch ')': column 6.
+Mismatch ')': column 2.
+Mismatch ')': column 1.
+Missing closing ')' to match opening '(' at: column 6.
+Division by zero!
+Division by zero!
+0
+Division by zero!
+3
+0
+Mismatch ')': column 3.
+Mismatch ')': column 3.

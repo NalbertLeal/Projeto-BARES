@@ -6,7 +6,8 @@
 #include <string>
 
 #include "QueueAr.h"
-#include "stackar.h"
+// #include "stackar.h"
+#include "thePilha.hpp"
 
 class BARES {
   public:
