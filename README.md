@@ -1,7 +1,8 @@
 # BARES (Basic Arithmetic Expression Evaluator based on Stacks)
 
-### tópicos abordados:
+### tópicos abordados:  
   
+- **Agradecimentos**
 - **A implementação**;
 - **Testes realizados**;
 - **Bugs**;
@@ -9,6 +10,10 @@
 - **Sobre mim**;
 
 ##### status do projeto: **Quase finalizado**  
+
+#### Agradecimentos:  
+  
+  Esse projeto foi feito por Nalbert Gabriel Melo Leal, aluno do bacharelado de BTI no IMD/UFRN. Entretanto ouve ajuda de Matheus Alves na ideia da criação de uma classe que armazena-se todos os possiveis erros gerados pelo programa, Luciano na ideia básica de como uma linha do arquivo de entrada poderia ser lido e do professor Selan Rodrigues por acompanhar a turma no decorrer da implementação dos projetos.
 
 #### A implementação:  
   
@@ -23,15 +28,15 @@
   
 ### Testes realizados:
   
-  O teste realizado será feito com o arquivo enviado pelo proprio professor, esse arquivo se encontra na pasta "test".
+  O teste realizado foi feito com o arquivo "entrada9.txt" enviado pelo proprio professor, esse arquivo se encontra na pasta bin/ junto ao arquivo "saida" que possui a saida desejada.
     
 ### Bugs:
   
-  O codigo ainda não está finalizado.Por conta disso não funciona cmo deveria.
+  O codigo ainda não está finalizado. Estaria funcional se a implementação da pilha não estivesse com problemas. Na semana anterior ao prazo final de entrega ouve tentativa atras de tentativa frustrada de resolver o problema.
 
 ### Observações:
 
-  O codigo será postado em meu GitHub e seu comportamento será observado quando for usado junto ao codigo de outros projetos. Caso seja encontrada alguma falha na lista o código problematico no repositorio do git será atualizado.
+  O codigo será postado em meu GitHub e certamente será finalizado. O projeto BARES é de dificil implementação no começo, mas com o tempo a implementação fica cada vez mais clara. O projeto é muito interessante e pode ser utilizado como base para diversos projetos futuros.
     
 ### Sobre mim:
     
