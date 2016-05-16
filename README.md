@@ -37,7 +37,10 @@
 ### Observações:
 
   O codigo será postado em meu GitHub e certamente será finalizado. O projeto BARES é de dificil implementação no começo, mas com o tempo a implementação fica cada vez mais clara. O projeto é muito interessante e pode ser utilizado como base para diversos projetos futuros.
-    
+
+  Esse projeto se encontra no Git Hub no link:
+  <a https://github.com/nalbertg/Projeto-BARES >
+
 ### Sobre mim:
     
 - **Aluno**: Nalbert Gabriel Melo Leal ;
